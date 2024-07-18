@@ -1,0 +1,14 @@
+site_name: Torch2Chip
+theme:
+  name: readthedocs
+markdown_extensions:
+  - mdx_math
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/contrib/auto-render.min.js
+extra_css:
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css
