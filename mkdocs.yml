@@ -33,11 +33,9 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github-alt
-      link: https://github.com/james-willett
-    - icon: fontawesome/brands/twitter
-      link: https://twitter.com/TheJamesWillett
+      link: https://github.com/mengjian0502
     - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/in/willettjames/
+      link: https://www.linkedin.com/in/jian-meng/
 
 markdown_extensions:
   - pymdownx.highlight:
