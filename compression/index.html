@@ -1,0 +1,1548 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../basic%20modules/">
+      
+      
+        <link rel="next" href="../export/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+    
+    
+      
+        <title>DNN Compression - Torch2Chip</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.76a95c52.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="DNN Compression - Torch2Chip" >
+      
+        <meta  property="og:description"  content="None" >
+      
+        <meta  property="og:image"  content="./assets/images/social/compression.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="None" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="DNN Compression - Torch2Chip" >
+      
+        <meta  name="twitter:description"  content="None" >
+      
+        <meta  name="twitter:image"  content="./assets/images/social/compression.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dnn-compression" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Torch2Chip" class="md-header__button md-logo" aria-label="Torch2Chip" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Torch2Chip
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              DNN Compression
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../basic%20modules/" class="md-tabs__link">
+        
+  
+    
+  
+  Basic Modules
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+    
+  
+  DNN Compression
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../export/" class="md-tabs__link">
+        
+  
+    
+  
+  T2C Core Modules
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../pretrained/" class="md-tabs__link">
+        
+  
+    
+  
+  Pre-trained Model
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../training/" class="md-tabs__link">
+        
+  
+    
+  
+  Training
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../tutorials/" class="md-tabs__link">
+        
+  
+    
+  
+  Tutorial
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Torch2Chip" class="md-nav__button md-logo" aria-label="Torch2Chip" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Torch2Chip
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../basic%20modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    DNN Compression
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    DNN Compression
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quantization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quantization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quantization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#low-precision-integer-quantization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Low Precision Integer Quantization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Low Precision Integer Quantization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scaling-factor-size-of-the-interval" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scaling factor: Size of the interval
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-point-distribution-shifter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zero Point: Distribution Shifter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Observers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#baseobserver-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      BaseObserver [Source]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BaseObserver [Source]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#register_rangeself" class="md-nav__link">
+    <span class="md-ellipsis">
+      register_range(self)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calculate_qparamself-xtorchtensor" class="md-nav__link">
+    <span class="md-ellipsis">
+      calculate_qparam(self, x:torch.Tensor)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basechannelwiseobserver-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      BaseChannelWiseObserver [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basetokenwiseobserver-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      BaseTokenWiseObserver [Source]
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#convert-faked-quantized-ops-to-low-precision-ops" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert Faked Quantized Ops to Low-precision Ops
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quantization-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quantization Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quantization Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minmax-quantization" class="md-nav__link">
+    <span class="md-ellipsis">
+      MinMax Quantization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MinMax Quantization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minmaxquantizer-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      MinMaxQuantizer [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minmaxchannelwiseweightquantizer-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      MinMaxChannelWiseWeightQuantizer [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minmaxtokenwisequantizer-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      MinMaxTokenWiseQuantizer [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minmaxobserver-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      MinMaxObserver [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minmaxchannelwiseweightobserver-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      MinMaxChannelWiseWeightObserver [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minmaxtokenwiseobserver-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      MinMaxTokenWiseObserver [Source]
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learned-step-size-quantization-lsq-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Learned Step Size Quantization (LSQ) [Reference]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Learned Step Size Quantization (LSQ) [Reference]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lsq-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      LSQ [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lsqtokenwise-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      LSQTokenWise [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lsqobserver-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      LSQObserver [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lsqtokenwiseobserver-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      LSQTokenWiseObserver [Source]
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adaptive-rounding-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adaptive Rounding [Reference]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adaptive Rounding [Reference]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adaround-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      AdaRound [Source]
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qdrop-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      QDrop [Reference]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="QDrop [Reference]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qdrop-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      QDrop [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qdroptokenwise-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      QDropTokenWise [Source]
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smoothquant-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      SmoothQuant [Reference]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SmoothQuant [Reference]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#smoothquantizer-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      SmoothQuantizer [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smoothquantchannelwiseweightquantizer-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      SmoothQuantChannelWiseWeightQuantizer [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smoothquanttokenwisequantizer-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      SmoothQuantTokenWiseQuantizer [Source]
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pruning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pruning
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pruning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#elementprune-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      ElementPrune [Source]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nmpruner-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      NMPruner [Source]
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    T2C Core Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pretrained/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pre-trained Model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../training/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Training
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="dnn-compression">DNN Compression</h1>
+<p>Driven by the desire of energy-efficient DNN computation, compression aims to either reduce the precision of the model representation (quantization) or remove the redundant paramters from the model itself (pruning). In Torch2Chip, we support the collective compression with <strong>both</strong> low precision quantization and sparsity. </p>
+<h2 id="quantization">Quantization</h2>
+<p>Quantization has been one of the most dominant methods for model compression. Essentially, quantization can be considered as a process of aligning the original floating-point distribution with a pre-defined "grid" with different data precisions (e.g., INTX, FPX). </p>
+<h3 id="low-precision-integer-quantization">Low Precision Integer Quantization</h3>
+<p>The integer-only quantization can be generalized as:</p>
+<div class="arithmatex">\[
+X_Q = \text{round}(\frac{X_{FP}}{S_x}) + \text{zero point}
+\]</div>
+<p>Where <span class="arithmatex">\(S_x\)</span> represents the scaling factor of the quantization. </p>
+<p>In practice, the quantization process is implemented as:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">xq</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+</code></pre></div>
+<p>Where <code>scale</code> is defined by the range of the floating point distribution (clipped or non-clipped) and the target data precision <code>n</code>. </p>
+<p><img alt="Quantization_Explain" src="../assets/Quantization_Explain.png" /></p>
+<h4 id="scaling-factor-size-of-the-interval">Scaling factor: Size of the interval</h4>
+<p>Scaling factor defines the interval between two adjacent levels after <strong>dequantization.</strong> Naturally, given the distribution with the floating point range = <span class="arithmatex">\([\alpha, \beta]\)</span> and precision <span class="arithmatex">\(n\)</span>​, the scaling factor is defined as:</p>
+<div class="arithmatex">\[
+S = \frac{\beta - \alpha}{2^n - 1}
+\]</div>
+<p>Naturally, it is easy to tell that the total number of "intervals" after quantization is <span class="arithmatex">\(2^n-1\)</span>, defined by the lower bound and upper bound of the quantization range (not floating point range), which is also characterized by the "signed" and "unsigned" data format. </p>
+<ul>
+<li><strong>Signed integer:</strong> Upper bound <code>qub</code> = <span class="arithmatex">\(2^{n-1}-1\)</span> ; Lower bound <code>qlb</code> = <span class="arithmatex">\(-2^{n-1}\)</span></li>
+<li><strong>Unsigned integer:</strong> Upper bound <code>qub</code> = <span class="arithmatex">\(2^n-1\)</span>; Lower bound <code>qlb</code> = 0.</li>
+</ul>
+<p>Both signed and unsigned integer leads to the total number of intervals = <span class="arithmatex">\(2^n-1\)</span>. </p>
+<h4 id="zero-point-distribution-shifter">Zero Point: Distribution Shifter</h4>
+<p>In practice, the data range of the floating point distribution could be mismatched with the quantization range of the target data format (signed or unsigned). As a result, an offset is needed to correct the range of distribution. </p>
+<p>Specifically, zero point is computed as the difference between the rounded floating point range and target lower bound of quantization: </p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">zero_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qlb</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lb</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+</code></pre></div>
+<p>Where <code>self.lb</code> , <code>self.qlb</code> represents the low bound of the original distribution (high precision) and the lower bound of quantization range. </p>
+<p>In Torch2Chip, scaling factors and zero point are defined as the basic "quantization parameters" (<code>qparams</code>), which will be registered directly under the <code>_QBase</code> : </p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span> <span class="nf">register_qparams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="c1"># register quantization scaler and zero point</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">1.0</span><span class="p">))</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;zero_point&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
+</code></pre></div>
+<p>Overall, the quantization process is summarized as:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">xr</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">zero_point</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">xq</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">xr</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">qlb</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">qub</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">xq</span> <span class="o">=</span> <span class="n">xq</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zero_point</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># dequantize</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dequantize</span><span class="p">:</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">xdq</span> <span class="o">=</span> <span class="n">xdq</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="observers">Observers</h3>
+<p>In Torch2Chip, the statistics (e.g., lower bound, upper bound) of the incoming tensor is captured by different observers, corresponding to different quantization method proposed by the prior research works.  Starting from the base quantizer (<code>_QBase</code>), the observer is a necessary part of the quantization process.</p>
+<h4 id="baseobserver-source"><code>BaseObserver</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/observer.py#L8">Source</a>]</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">class</span> <span class="nc">BaseObserver</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>nbit</code>: Target precision of quantization.</li>
+<li><code>unsigned</code>: Target data type (signed or unsigned integer).</li>
+<li><code>initialize</code>: Initialization flag. </li>
+</ul>
+<h5 id="register_rangeself"><code>register_range(self)</code></h5>
+<p>Register the buffer to record the numerical range in the high-precision floating point domain. </p>
+<ul>
+<li><code>self.lb</code>: Lower bound of the floating point distribution (default = <code>torch.tensor("-inf")</code>)</li>
+<li><code>self.ub</code>: Upper bound of the floating point distribution (default = <code>torch.tensor("inf")</code>). </li>
+</ul>
+<h5 id="calculate_qparamself-xtorchtensor"><code>calculate_qparam(self, x:torch.Tensor)</code></h5>
+<p>Calculate the quantization parameters (scaling factor and zero point) based on the updated upper and lower bound. </p>
+<p><strong>Output:</strong></p>
+<p>Calculated quantization parameter </p>
+<h4 id="basechannelwiseobserver-source"><code>BaseChannelWiseObserver</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/observer.py#L69">Source</a>]</h4>
+<p>Inherited from <code>BaseObserver</code>,  the channel-wise observer capture the numerical range along the channels of weight tensor. </p>
+<ul>
+<li>
+<p><code>num_channels</code>: Number of channels of a given layer, defined at the begining of compression. </p>
+</li>
+<li>
+<p><code>self.lb</code>: Lower bound of the floating point tensor (shape = <code>self.num_channels</code>). </p>
+</li>
+<li><code>self.ub</code>: Upper bound of the floating point tensor (shape = <code>self.num_channels</code>). </li>
+</ul>
+<h4 id="basetokenwiseobserver-source"><code>BaseTokenWiseObserver</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/observer.py#L107">Source</a>]</h4>
+<p>Inherited from <code>BaseObserver</code>, the token-wise observer capture the numerical range along the token dimension of the weight tensor. </p>
+<ul>
+<li>
+<p><code>num_tokens</code>: Number of tokens of a given model, defined at the begining of compression. </p>
+</li>
+<li>
+<p><code>self.lb</code>: Lower bound of the floating point tensor (shape = <code>self.num_tokens</code>).  </p>
+</li>
+<li><code>self.ub</code>: Upper bound of the floating point tensor (shape = <code>self.num_tokens</code>). </li>
+</ul>
+<h3 id="convert-faked-quantized-ops-to-low-precision-ops">Convert Faked Quantized Ops to Low-precision Ops</h3>
+<p>By default, the quantized tensor <span class="arithmatex">\(X_Q\)</span> requires dequantization during training (PTQ, QAT) to ensure the numerical stability:
+$$
+X_{DQ} = S_X(X_Q - \text{zero point})
+$$
+Given the weight tensor <span class="arithmatex">\(X^L\)</span> and weight tensor <span class="arithmatex">\(W^L\)</span> of layer <span class="arithmatex">\(L\)</span>, the dequantize process can be factorized out:
+$$
+Y = S_WS_X(X_Q \cdot W_Q)
+$$
+For simplicity, we assume the zero point = 0. By doing so, the operation (e.g., MatMul, Convolution) between <span class="arithmatex">\(X_Q, W_Q\)</span> is compressed. </p>
+<p>In practice, the accuracy-driven quantization requires different granularity schemes for weight and activation. Therefore, the fusion of the scaling factors should be individually treated for different schemes (<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/t2c/fusers/vit.py#L26">ViT Example</a>).</p>
+<h3 id="quantization-methods">Quantization Methods</h3>
+<p>The objective of Torch2Chip is enabling the systematic design of compression. Starting from customized compression algorithm, all the way to the fully quantized and observable tensors (intermediate results).</p>
+<p>In terms of customization, Torch2Chip support recent state-of-the-art (SoTA) quantization algorithms, together with different quantization granularities (tensor-wise, token-wise, channel-wise).</p>
+<ul>
+<li><strong>Note:</strong> We are continously adding different quantization algorithms into Torch2Chip! </li>
+</ul>
+<p>In Torch2Chip, all the quantization methods follows the structure of 1) Quantizer (inherited from <code>_QBase</code>),  2) Observer (<code>_BaseObserver</code>), and 3) Properly calculated and stored quantization parameters (<code>qparams</code>).</p>
+<h4 id="minmax-quantization">MinMax Quantization</h4>
+<p>Simplest quantization strategy which takes the minimal and maximal value of the distribution as the upper bound of lower bound of quantization.</p>
+<h5 id="minmaxquantizer-source"><code>MinMaxQuantizer</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/minmax.py#L74">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">class</span> <span class="nc">MinMaxQuantizer</span><span class="p">(</span><span class="n">_QBase</span><span class="p">):</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>            <span class="c1"># observer</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">MinMaxObserver</span><span class="p">(</span><span class="n">nbit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unsigned</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Tensor-wise quantizer</strong> with single scaling factor and zero point, which are computed by observing the minimal and maximal bound of the incoming distribution (e.g., weight. activation). </p>
+<h5 id="minmaxchannelwiseweightquantizer-source"><code>MinMaxChannelWiseWeightQuantizer</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/minmax.py#L141">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">class</span> <span class="nc">MinMaxChannelWiseWeightQuantizer</span><span class="p">(</span><span class="n">MinMaxQuantizer</span><span class="p">):</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">:</span><span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span> <span class="o">=</span> <span class="n">num_channels</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="c1"># observer</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">MinMaxChannelWiseWeightObserver</span><span class="p">(</span><span class="n">nbit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="o">=</span><span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="c1"># qparams</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_qparams</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Channel-wise quantizer</strong> for weight tensors. The observer (<code>MinMaxChannelWiseWeightObserver</code>) and quantization parameters (<code>scale</code> and <code>zero_point</code>) are designed to match the channel-dimension of the incoming tensor, for both convolutional neural network and transformer architectures. </p>
+<h5 id="minmaxtokenwisequantizer-source"><code>MinMaxTokenWiseQuantizer</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/minmax.py#L104">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span> <span class="nc">MinMaxTokenWiseQuantizer</span><span class="p">(</span><span class="n">MinMaxQuantizer</span><span class="p">):</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">num_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">197</span><span class="p">):</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span> <span class="o">=</span> <span class="n">num_tokens</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="c1"># observer</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">MinMaxTokenWiseObserver</span><span class="p">(</span><span class="n">nbit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unsigned</span><span class="p">,</span> <span class="n">num_tokens</span><span class="o">=</span><span class="n">num_tokens</span><span class="p">)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="c1"># qparams</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_qparams</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Token-wise quantizer</strong> for activation tensors.  The observer (<code>MinMaxChannelMinMaxTokenWiseObserver</code>) and quantization parameters (<code>scale</code> and <code>zero_point</code>) are designed to match the token-dimension of the incoming tensor, <strong>for transformer architecture only.</strong></p>
+<h5 id="minmaxobserver-source"><code>MinMaxObserver</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/minmax.py#L9">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">class</span> <span class="nc">MinMaxObserver</span><span class="p">(</span><span class="n">BaseObserver</span><span class="p">):</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Tensor-wise Observer.</strong> Track the minimal and maximal value of the incoming tensor (for weight or activation) in the forward pass. Given the total number of calibration samples = <span class="arithmatex">\(N\)</span>, <code>MinMaxObserver</code> continously update the upper bound and lower bound of the quantization range (<code>lb</code> and <code>ub</code>). </p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">lb</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lb</span><span class="p">,</span> <span class="n">min_val</span><span class="p">)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">ub</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ub</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># update bound</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="bp">self</span><span class="o">.</span><span class="n">lb</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">lb</span><span class="p">)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="bp">self</span><span class="o">.</span><span class="n">ub</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">ub</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Note:</strong> The quantization parameters of <code>MinMaxQuantizer</code> and <code>MinMaxObserver</code> will remain <strong>fixed</strong> during the post-quantization inference. Dynamically calculating the quantization parameter on the fly leads to the repetitive sorting and hardware overhead. </p>
+<h5 id="minmaxchannelwiseweightobserver-source"><code>MinMaxChannelWiseWeightObserver</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/minmax.py#L25">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">class</span> <span class="nc">MinMaxChannelWiseWeightObserver</span><span class="p">(</span><span class="n">BaseChannelWiseObserver</span><span class="p">):</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Channel-wise observer for weight tensors.</strong> Generating the channel-wise quantization boundaries (<code>lb</code> and <code>ub</code>), observing the channel-wise minimal and maximal value and further calculate the channel-wise scaling factor (<code>scale</code>) and zero point (<code>zero_point</code>). </p>
+<p><strong>Attributes / Methods:</strong></p>
+<ul>
+<li><code>num_channels</code>: Number of channels of the weight tensor. </li>
+<li><code>reshape(self)</code>: Reshape the incoming tensor to isolate the channel dimension (for CNN or transformers).</li>
+</ul>
+<h5 id="minmaxtokenwiseobserver-source"><code>MinMaxTokenWiseObserver</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/minmax.py#L17C7-L17C30">Source</a>]</h5>
+<p><strong>Token-wise observer for activation tensors.</strong> Generating the channel-wise quantization boundaries (<code>lb</code> and <code>ub</code>), observing the channel-wise minimal and maximal value and further calculate the token-wise scaling factor (<code>scale</code>) and zero point (<code>zero_point</code>). </p>
+<h4 id="learned-step-size-quantization-lsq-reference">Learned Step Size Quantization (LSQ) [<a href="https://arxiv.org/abs/1902.08153">Reference</a>]</h4>
+<p>Learned step size quantizer considers the scaling factor of quantization as a <strong>learnable</strong> parameter (<code>torch.nn.Parameter</code>). </p>
+<h5 id="lsq-source"><code>LSQ</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/lsq.py#L88">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">class</span> <span class="nc">LSQ</span><span class="p">(</span><span class="n">_QBase</span><span class="p">):</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">train_flag</span> <span class="o">=</span> <span class="n">train_flag</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">unsigned</span> <span class="o">=</span> <span class="n">unsigned</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>        <span class="c1"># initialization flag</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        <span class="c1"># observer</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">LSQObserver</span><span class="p">(</span><span class="n">nbit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>        <span class="c1"># register q parameters</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_qparams</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Tensor-wise quantizer</strong> that optimizes the learnable scaling factor (<code>delta</code>) throughout the layer-wise calibration process. </p>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>register_qparams(self)</code> : Together with the quantization parameters, the learnable scaling factor <code>delta</code> is registered as an trainable <code>torch.nn.Parameter</code>:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="bp">self</span><span class="o">.</span><span class="n">register_parameter</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)))</span>
+</code></pre></div>
+<ul>
+<li><code>initialize</code>: Flag controls the initialization of the learnable scaling factor (default = False). </li>
+</ul>
+<p><strong>Note:</strong> LSQ is designed for low precision quantization for the activation tensors. </p>
+<h5 id="lsqtokenwise-source"><code>LSQTokenWise</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/lsq.py#L149">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">class</span> <span class="nc">LSQTokenWise</span><span class="p">(</span><span class="n">LSQ</span><span class="p">):</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">num_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">197</span><span class="p">):</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span> <span class="o">=</span> <span class="n">num_tokens</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">LSQTokenWiseObserver</span><span class="p">(</span><span class="n">nbit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>        <span class="c1"># register q parameters</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_qparams</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Token-wise quantizer</strong> for activation tensors. The learnable step size (<code>delta</code>) is initialized as a 1-dimensional tensor with the size = total number of tokens for each inference. Given the requirement of the fixed token size, <code>LSQTokenWise</code> quantizer is suitable for vision transformer or single pass LLM inference with fixed sequence length, e.g., 197 or 2048, respectively. </p>
+<h5 id="lsqobserver-source"><code>LSQObserver</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/lsq.py#L12">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">class</span> <span class="nc">LSQObserver</span><span class="p">(</span><span class="n">BaseObserver</span><span class="p">):</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Tensor-wise observer</strong> for activation tensors. <code>LSQObserver</code> allocates the best initial values before the PTQ training starts. </p>
+<ul>
+<li><code>quantize</code>: One shot quantization with the given candidate scaling factor and zero point. </li>
+<li><code>calculate_qparam</code>: Find the optimal value of scaling factor by gradually reduce the candidate scaling factor:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">new_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lb</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">))</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">new_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ub</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">))</span>
+</code></pre></div>
+<h5 id="lsqtokenwiseobserver-source"><code>LSQTokenWiseObserver</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/lsq.py#L50">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">class</span> <span class="nc">LSQTokenWiseObserver</span><span class="p">(</span><span class="n">BaseTokenWiseObserver</span><span class="p">):</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">num_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">197</span><span class="p">):</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">,</span> <span class="n">num_tokens</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Token-wise observer</strong> which initialize the token-wise scaling factor with the best candidate and lowest quantization error. </p>
+<h4 id="adaptive-rounding-reference">Adaptive Rounding [<a href="https://arxiv.org/abs/2004.10568">Reference</a>]</h4>
+<p>Weight quantization method with learnable and adaptive rouding intervals. </p>
+<h5 id="adaround-source"><code>AdaRound</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/adaround.py#L52">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">class</span> <span class="nc">AdaRound</span><span class="p">(</span><span class="n">_QBase</span><span class="p">):</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unsigned</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">iter</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>        <span class="c1"># initialize the alpha</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">init_flag</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>        <span class="c1"># parameters</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zeta</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.1</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>        <span class="c1"># define the observer</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">AdaRoundObserver</span><span class="p">(</span><span class="n">nbit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>        <span class="c1"># register the learnable parameters</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_alpha</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Tensor-wise weight quantizer</strong> with element-wise trainable interval (<code>alpha</code>), which determines the rounding direction of each single weight element. </p>
+<p><strong>Attributes and Methods:</strong></p>
+<ul>
+<li><code>register_alpha</code>: Register the element-wise rounding offset. </li>
+</ul>
+<p>To ensure the differentiability, the training path <code>trainFunc</code> performs the soft rounding on the weight tensor. While in the inference path <code>evalFunc</code>, the offset has been rounded to either 0 or 1, indicating the direction of "round up" or "stay at current value".</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">soft_shift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_flag</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>   <span class="n">xada</span> <span class="o">=</span> <span class="n">xfloor</span> <span class="o">+</span> <span class="n">soft_shift</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>   <span class="n">xada</span> <span class="o">=</span> <span class="n">xfloor</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">ge</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="n">xq</span> <span class="o">=</span> <span class="n">xada</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">zero_point</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># integer representation</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">xq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">qlb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">qub</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zero_point</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="qdrop-reference">QDrop [<a href="https://arxiv.org/abs/2203.05740">Reference</a>]</h4>
+<p>Randomly disable the quantization and partially activate the full-precision operation during post-training quantization calibration, designed for activation quantization.</p>
+<p>QDrop is inherited from LSQ, while introducing a drop out probability (default = 0.5). </p>
+<h5 id="qdrop-source"><code>QDrop</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/qdrop.py#L10">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">class</span> <span class="nc">QDrop</span><span class="p">(</span><span class="n">LSQ</span><span class="p">):</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">drop_prob</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">drop_prob</span> <span class="o">=</span> <span class="n">drop_prob</span>
+</code></pre></div>
+<p><strong>Attributes</strong>:</p>
+<ul>
+<li><code>drop_prob</code>: Drop out probability, randomly replace (mask) the quantized tensor by the original full precision elements. </li>
+</ul>
+<h5 id="qdroptokenwise-source"><code>QDropTokenWise</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/qdrop.py#L24">Source</a>]</h5>
+<p>Token-wise quantizer based on QDrop algorithm, inherited from <code>LSQTokenWise</code>. </p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">class</span> <span class="nc">QDropTokenWise</span><span class="p">(</span><span class="n">LSQTokenWise</span><span class="p">):</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">drop_prob</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">drop_prob</span><span class="o">=</span><span class="mf">0.5</span>
+</code></pre></div>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>drop_prob</code>: Drop out probability, randomly replace (mask) the quantized tensor by the original full precision elements. </li>
+</ul>
+<h4 id="smoothquant-reference">SmoothQuant [<a href="https://arxiv.org/abs/2211.10438">Reference</a>]</h4>
+<p>Collective quantizer for <strong>both</strong> weight and activation, designed for transformer architecture. </p>
+<h5 id="smoothquantizer-source"><code>SmoothQuantizer</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/smoothquant.py#L15">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">class</span> <span class="nc">SmoothQuantizer</span><span class="p">(</span><span class="n">_QBase</span><span class="p">):</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>        <span class="c1"># smoother</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">smoother</span> <span class="o">=</span> <span class="n">MulShift</span><span class="p">()</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>        <span class="c1"># observer</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">MinMaxObserver</span><span class="p">(</span><span class="n">nbit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unsigned</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Tensor-wise quantizer</strong> for both activation or weights. Smooth out the distribution to alleviate the impact of long-tailed distribution. The quantization scheme is inherited from the <code>MinMaxQuantizer</code> with the tensor-wise <code>MinMaxObserver</code>. </p>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>smoother</code>: Distribution smoother (<code>MulShift</code>), the smooth factor should be assigned properly before the PTQ starts, as shown in <code>SmoothQuantPTQViT</code> (<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/trainer/smoothquant.py#L14">source</a>). </li>
+<li><code>observer</code>: Tensor-wise observer <code>MinMaxObserver</code>. </li>
+</ul>
+<p>The input tensor (<code>torch.Tensor</code>) will be smoothed out before quantization:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">def</span> <span class="nf">q</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>  <span class="c1"># smooth out the distribution</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoother</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>  <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_flag</span><span class="p">:</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>    <span class="c1"># go through the observer</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>    <span class="n">delta</span><span class="p">,</span> <span class="n">zero_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">delta</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">zero_point</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">zero_point</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>  <span class="n">xr</span> <span class="o">=</span> <span class="n">round_ste</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">zero_point</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>  <span class="n">xq</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">xr</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">qlb</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">qub</span><span class="p">)</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>  <span class="n">xdq</span> <span class="o">=</span> <span class="n">xq</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zero_point</span><span class="p">)</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>  <span class="c1"># dequantize</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>  <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dequantize</span><span class="p">:</span>
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>      <span class="n">xdq</span> <span class="o">=</span> <span class="n">xdq</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a>
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a>  <span class="k">return</span> <span class="n">xdq</span>
+</code></pre></div>
+<p>Different from the original implementation, Torch2Chip enables the SmoothQuant for vision transformers (ViT). </p>
+<h5 id="smoothquantchannelwiseweightquantizer-source"><code>SmoothQuantChannelWiseWeightQuantizer</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/smoothquant.py#L54">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">class</span> <span class="nc">SmoothQuantChannelWiseWeightQuantizer</span><span class="p">(</span><span class="n">SmoothQuantizer</span><span class="p">):</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">:</span><span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span> <span class="o">=</span> <span class="n">num_channels</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>        <span class="c1"># smoother</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">smoother</span> <span class="o">=</span> <span class="n">MulShift</span><span class="p">()</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>        <span class="c1"># observer</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">MinMaxChannelWiseWeightObserver</span><span class="p">(</span><span class="n">nbit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="o">=</span><span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_qparams</span><span class="p">()</span>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>    <span class="k">def</span> <span class="nf">register_qparams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;zero_point&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+<p><strong>Channel-wise quantizer</strong> for weight tensors. Inherited from the tensor-wise <code>SmoothQuantizer</code>, together with the channel-wise min-max observer (<code>MinMaxChannelWiseWeightObserver</code>). </p>
+<h5 id="smoothquanttokenwisequantizer-source"><code>SmoothQuantTokenWiseQuantizer</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/61b3ef32fdd68f3d576c00bca1a4fc977ea1a18d/src/quantization/smoothquant.py#L71">Source</a>]</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">class</span> <span class="nc">SmoothQuantTokenWiseQuantizer</span><span class="p">(</span><span class="n">SmoothQuantizer</span><span class="p">):</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">num_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">197</span><span class="p">):</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span> <span class="o">=</span> <span class="n">num_tokens</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nbit</span><span class="p">,</span> <span class="n">train_flag</span><span class="p">,</span> <span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>        <span class="c1"># smoother</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">smoother</span> <span class="o">=</span> <span class="n">MulShift</span><span class="p">()</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>        <span class="c1"># observer</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">MinMaxTokenWiseObserver</span><span class="p">(</span><span class="n">nbit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbit</span><span class="p">,</span> <span class="n">unsigned</span><span class="o">=</span><span class="n">unsigned</span><span class="p">)</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_qparams</span><span class="p">()</span>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>    <span class="k">def</span> <span class="nf">sync_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">num_tokens</span><span class="p">:</span>
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">num_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>    <span class="k">def</span> <span class="nf">update_qparam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>            <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span><span class="p">:</span>
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">register_qparams</span><span class="p">()</span>
+<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">register_range</span><span class="p">()</span>
+<a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a>
+<a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+<a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a>            <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span><span class="p">:</span>
+<a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">register_qparams</span><span class="p">()</span>
+<a id="__codelineno-24-28" name="__codelineno-24-28" href="#__codelineno-24-28"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">register_range</span><span class="p">()</span>
+<a id="__codelineno-24-29" name="__codelineno-24-29" href="#__codelineno-24-29"></a>
+<a id="__codelineno-24-30" name="__codelineno-24-30" href="#__codelineno-24-30"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">sync_tokens</span><span class="p">()</span>
+<a id="__codelineno-24-31" name="__codelineno-24-31" href="#__codelineno-24-31"></a>
+<a id="__codelineno-24-32" name="__codelineno-24-32" href="#__codelineno-24-32"></a>    <span class="k">def</span> <span class="nf">register_qparams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-24-33" name="__codelineno-24-33" href="#__codelineno-24-33"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<a id="__codelineno-24-34" name="__codelineno-24-34" href="#__codelineno-24-34"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;zero_point&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_tokens</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<a id="__codelineno-24-35" name="__codelineno-24-35" href="#__codelineno-24-35"></a>
+<a id="__codelineno-24-36" name="__codelineno-24-36" href="#__codelineno-24-36"></a>    <span class="k">def</span> <span class="nf">trainFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+<a id="__codelineno-24-37" name="__codelineno-24-37" href="#__codelineno-24-37"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">update_qparam</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<a id="__codelineno-24-38" name="__codelineno-24-38" href="#__codelineno-24-38"></a>
+<a id="__codelineno-24-39" name="__codelineno-24-39" href="#__codelineno-24-39"></a>        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">trainFunc</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Token-wise quantizer</strong> for activation quantization, inherited from the base <code>SmoothQuantizer</code>. </p>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>update_qparam</code>: Update the shape of the quantization parameters with the given input tensor. </li>
+<li><code>sync_tokens</code>: Synchronize the token size (<code>num_tokens</code>) between the quantizer and the token-wise observer. </li>
+</ul>
+<h2 id="pruning">Pruning</h2>
+<p>Pruning sparsifies the weight tensor by removing the weight element with certain importance metrics (e.g., magnitude score). In Torch2Chip, we provide both element-wise pruning and N:M structured fine-grained sparsity. </p>
+<h3 id="elementprune-source"><code>ElementPrune</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/dfd075b853c85af830d82a6feffd652cda0e0bc8/src/pruner/element.py#L14">Source</a>]</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="k">class</span> <span class="nc">ElementPrune</span><span class="p">(</span><span class="n">Pruner</span><span class="p">):</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>                <span class="n">model</span><span class="p">:</span> <span class="n">Module</span><span class="p">,</span> 
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>                <span class="n">prune_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>                <span class="n">warmup</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>                <span class="n">final_epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>                <span class="n">dataloader</span><span class="p">,</span> 
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>                <span class="n">prune_freq</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>                <span class="n">prune_decay</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>                <span class="n">regrow</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>                <span class="n">init_sparsity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>            <span class="p">):</span>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">prune_ratio</span><span class="p">,</span> <span class="n">warmup</span><span class="p">,</span> <span class="n">final_epoch</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">prune_freq</span><span class="p">,</span> <span class="n">prune_decay</span><span class="p">,</span> <span class="n">regrow</span><span class="p">)</span>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">init_sparsity</span> <span class="o">=</span> <span class="n">init_sparsity</span>
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">init_density</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_sparsity</span>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">init_schedule</span><span class="p">()</span>
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_density</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">erk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">init_density</span><span class="p">)</span>
+</code></pre></div>
+<p>Element-wise pruner based on magnitude pruning and gradient-based regrow. The prune-and-regrow mechanism is adopted from <em>Sparse Training via Boosting Pruning Plasticity with Neuroregeneration</em> (Liu, NeurIPS, 2021).</p>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>model</code>: DNN model constructed by <code>_QBaseConv2d</code> or <code>_QBaseLinear</code> layers. </li>
+<li><code>prune_ratio</code>: Target weight sparsity. </li>
+<li><code>warmup</code>: Warmup epoch before starting the pruning. </li>
+<li><code>final_epoch</code>: Final epoch of updating sparsity. </li>
+<li><code>data_loader</code>: Training dataset loader</li>
+<li><code>prune_freq</code>: Interval between the consecutive sparsity update steps. </li>
+<li><code>prune_decay</code>: Gradually reduce the ratio of prune-and regrow (Liu, NeurIPS, 2021).</li>
+<li><code>regrow</code>: Enable the prune-and-regrow or not, <code>regrow=False</code> means perform vanilla magnitude-based pruning. </li>
+<li><code>init_sparsity</code>: Initial sparsity initialized via ERK. </li>
+</ul>
+<h3 id="nmpruner-source"><code>NMPruner</code> [<a href="https://github.com/SeoLabCornell/torch2chip/blob/dfd075b853c85af830d82a6feffd652cda0e0bc8/src/pruner/nm.py#L11">Source</a>]</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="k">class</span> <span class="nc">NMPruner</span><span class="p">(</span><span class="n">Pruner</span><span class="p">):</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>                <span class="n">model</span><span class="p">:</span> <span class="n">Module</span><span class="p">,</span> 
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>                <span class="n">prune_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>                <span class="n">warmup</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>                <span class="n">final_epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>                <span class="n">dataloader</span><span class="p">,</span> 
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>                <span class="n">prune_freq</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>                <span class="n">prune_decay</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>                <span class="n">regrow</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>                <span class="n">M</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>                <span class="n">N</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>                <span class="n">init_sparsity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>            <span class="p">):</span>
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">prune_ratio</span><span class="p">,</span> <span class="n">warmup</span><span class="p">,</span> <span class="n">final_epoch</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">prune_freq</span><span class="p">,</span> <span class="n">prune_decay</span><span class="p">,</span> <span class="n">regrow</span><span class="p">)</span>
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>        <span class="c1"># group size</span>
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">M</span>
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a>
+<a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a>        <span class="c1"># pruning probability</span>
+<a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">init_sparsity</span> <span class="o">=</span> <span class="n">init_sparsity</span>
+<a id="__codelineno-26-22" name="__codelineno-26-22" href="#__codelineno-26-22"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">init_density</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_sparsity</span>
+<a id="__codelineno-26-23" name="__codelineno-26-23" href="#__codelineno-26-23"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">init_schedule</span><span class="p">()</span>
+</code></pre></div>
+<p>Exploiting structured fine-grained N:M sparsity with group-wise prune and regrow. Gradually increase the percentage of the N:M groups across the entire model. </p>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>model</code>: DNN model constructed by <code>_QBaseConv2d</code> or <code>_QBaseLinear</code> layers. </li>
+<li><code>prune_ratio</code>: Target weight sparsity. </li>
+<li><code>warmup</code>: Warmup epoch before starting the pruning. </li>
+<li><code>final_epoch</code>: Final epoch of updating sparsity. </li>
+<li><code>data_loader</code>: Training dataset loader</li>
+<li><code>prune_freq</code>: Interval between the consecutive sparsity update steps. </li>
+<li><code>prune_decay</code>: Gradually reduce the ratio of prune-and regrow (Liu, NeurIPS, 2021).</li>
+<li><code>regrow</code>: Enable the prune-and-regrow or not, <code>regrow=False</code> means perform vanilla magnitude-based pruning. </li>
+<li><code>init_sparsity</code>: Initial sparsity initialized via ERK. </li>
+<li><code>N</code>: Number of dense elements within the group size <code>M</code>. </li>
+<li><code>M</code>: Number of weight elements of each group. </li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/mengjian0502" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/jian-meng/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotation", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
